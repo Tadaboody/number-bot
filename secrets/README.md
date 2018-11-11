@@ -1,10 +1,8 @@
-## Instance
+# Git-crypt
 ---
-This directory includes files needed to create an instance of the server. such as API keys and local database files
+This directory includes secret files that were encrypted using [git-crypt](https://github.com/AGWA/git-crypt)
 
-### Git-crypt
-To encrypt the [config.py](config.py) file, which includes secret API keys and database passwords we used the [git-crypt](https://github.com/AGWA/git-crypt) program which uses gpg keys.  
-#### __Unlocking git-crypt:__
+#### Unlocking git-crypt
 to unlock the crypted files and use them you must create a gpg key using  
 ```
 gpg --full-gen-key
