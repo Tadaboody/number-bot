@@ -1,13 +1,12 @@
 import random
 from enum import Enum
 from pathlib import Path
-from typing import Callable
 
-import discord
 import requests
-from discord import Client, Message
+from discord import Message
 from discord.ext import commands
 from word2number.w2n import word_to_num
+
 
 class NumbersAPI:
     class Categories(Enum):
@@ -45,16 +44,6 @@ class NumbersAPI:
         return json['text']
 
 
-class IOClient():
-    def event(self, func: Callable):
-        setattr(self, func.__name__, func)
-
-    def run(self, token):
-        self.on_ready()
-        while True:
-            self.on_message(discord.Message(content=input('Dissy:')))
-
-
 client = commands.Bot(command_prefix='#')
 
 
@@ -68,7 +57,7 @@ def main():
 def find_number(sentance: str)->int:
     try:
         return word_to_num(sentance)
-    except ValueError: # No number that is a word
+    except ValueError:  # No word that is a number
         for word in sentance.split():
             try:
                 return int(word)
