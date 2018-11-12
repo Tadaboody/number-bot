@@ -40,7 +40,7 @@ class NumbersAPI:
         resp.raise_for_status()
         json = resp.json()
         if not json['found']:
-            raise ValueError("Boring number is boring")
+            raise ValueError(f"{number} is boooring")
         return json['text']
 
 
@@ -58,11 +58,10 @@ def find_number(sentance: str)->int:
     try:
         return word_to_num(sentance)
     except ValueError:  # No word that is a number
-        for word in sentance.split():
-            try:
-                return int(word)
-            except ValueError:
-                pass
+        import re
+        match = re.search(r"(\d+)", sentance)
+        if match:
+            return match[0]
     raise ValueError("No number found in sentane")
 
 
