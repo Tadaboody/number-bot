@@ -62,7 +62,7 @@ def find_number(sentance: str)->int:
         match = re.search(r"(\d+)", sentance)
         if match:
             return match[0]
-    raise ValueError("No number found in sentane")
+    raise ValueError("No number found in sentence")
 
 
 @client.event
