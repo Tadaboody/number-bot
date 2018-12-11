@@ -10,7 +10,9 @@ Number facts are supplied thanks to [numbersapi](http://numbersapi.com/#42)
 ## Dependencies:
 - Python 3.6+
 - All packages in listed in [requirements.txt](requirements.txt)
-
+## Getting a token:
+The token in secrets/token.txt needs to be replaced with discord API token.
+Instructions on getting a token can be found [here](https://github.com/reactiflux/discord-irc/wiki/Creating-a-discord-bot-&-getting-a-token)
 ## Running
 ```sh
 python3 -m venv venv --prompt number-bot
