@@ -2,7 +2,7 @@ import random
 from enum import Enum
 from pathlib import Path
 
-import requests
+import aiohttp
 from discord import Message
 from discord.ext import commands
 from word2number.w2n import word_to_num
@@ -19,26 +19,24 @@ class NumbersAPI:
         def non_random(cls):
             return [category for category in cls if category != cls.RANDOM]
 
-    def __init__(self):
-        self.client = requests.Session()
-
-    def get(self, number: int, category: 'NumbersAPI.Categories'):
+    async def get(self, number: int, category: 'NumbersAPI.Categories'):
         if category == NumbersAPI.Categories.RANDOM:
             non_random_categories = self.Categories.non_random()
-            for cat in random.sample(non_random_categories, len(non_random_categories)):
+            random.shuffle(non_random_categories)
+            for cat in non_random_categories :
                 try:
-                    return self.__ask_trivia(number, cat)
+                    return await self.__ask_trivia(number, cat)
                 except ValueError:
                     pass
-                raise ValueError
-        return self.__ask_trivia(number, category)
+        return await self.__ask_trivia(number, category)
+    
 
-    def __ask_trivia(self, number, category: 'NumbersAPI.Categories'):
+    async def __ask_trivia(self, number, category: 'NumbersAPI.Categories'):
         NUMBERS_API = 'http://numbersapi.com'
-        resp = self.client.get(
-            '/'.join([NUMBERS_API, str(number), category.value]), params={'json': True})
-        resp.raise_for_status()
-        json = resp.json()
+        url = '/'.join([NUMBERS_API, str(number), category.value])
+        async with aiohttp.request('GET',url,params={'json': True}) as resp:
+            resp.raise_for_status()
+            json = await resp.json()
         if not json['found']:
             raise ValueError(f"{number} is boooring")
         return json['text']
@@ -73,11 +71,11 @@ async def on_message(message: Message):
         num = find_number(message.content)
         print(f"number found {num}")
         api = NumbersAPI()
-        resp = api.get(num, api.Categories.RANDOM)
+        resp = await api.get(num, api.Categories.RANDOM)
         print(resp)
         await client.send_message(message.channel, resp)
-    except ValueError:
-        pass
+    except ValueError as e:
+        print(e)
 
 
 @client.event
