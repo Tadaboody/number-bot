@@ -10,10 +10,10 @@ from word2number.w2n import word_to_num
 
 class NumbersAPI:
     class Categories(Enum):
-        TRIVIA = 'trivia'
-        YEAR = 'year'
-        MATH = 'math'
-        RANDOM = 'random'
+        TRIVIA = "trivia"
+        YEAR = "year"
+        MATH = "math"
+        RANDOM = "random"
 
         @classmethod
         def non_random(cls):
@@ -39,20 +39,23 @@ class NumbersAPI:
             json = await resp.json()
         if not json['found']:
             raise ValueError(f"{number} is boooring")
-        return json['text']
+        return json["text"]
 
 
-client = commands.Bot(command_prefix='#')
+client = commands.Bot(command_prefix="#")
+
+
+FILE_DIR = Path(__file__).resolve().parent
+SECRETS_DIR = FILE_DIR/ "secrets"
 
 
 def main():
     print("Reloading...")
-    FILE_DIR = Path(__file__).parent
-    token_file = FILE_DIR/'secrets'/'token.txt'
+    token_file = SECRETS_DIR / "token.txt"
     client.run(token_file.read_text())
 
 
-def find_number(sentance: str)->int:
+def find_number(sentance: str) -> int:
     try:
         return word_to_num(sentance)
     except ValueError:  # No word that is a number
@@ -80,11 +83,11 @@ async def on_message(message: Message):
 
 @client.event
 async def on_ready():
-    FILE_DIR = Path(__file__).parent
-    client_id = FILE_DIR/'secrets'/'client_id.txt'
+    client_id = SECRETS_DIR / "client_id.txt"
     permissions = 2048
-    invite_link = f'https://discordapp.com/oauth2/authorize?&client_id={client_id.read_text()}&scope=bot&permissions={permissions}'
+    invite_link = f"https://discordapp.com/oauth2/authorize?&client_id={client_id.read_text()}&scope=bot&permissions={permissions}"
     print(f"Bot running! Invite me at {invite_link}")
 
-if __name__ == '__main__':
+
+if __name__ == "__main__":
     main()
