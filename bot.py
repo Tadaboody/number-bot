@@ -32,7 +32,7 @@ class NumbersAPI:
     async def __ask_trivia(self, number, category: "NumbersAPI.Categories"):
         NUMBERS_API = "http://numbersapi.com"
         url = "/".join([NUMBERS_API, str(number), category.value])
-        async with aiohttp.request("GET", url, params={"json": True}) as resp:
+        async with aiohttp.request("GET", url, params={"json": "true"}) as resp:
             resp.raise_for_status()
             json = await resp.json()
         if not json["found"]:
@@ -78,7 +78,7 @@ class Numbie(discord.Client):
             api = NumbersAPI()
             resp = await api.get(num, api.Categories.RANDOM)
             print(resp)
-            await self.send_message(message.channel, resp)
+            await message.channel.send(resp)
         except ValueError as e:
             print(e)
 
